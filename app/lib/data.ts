@@ -20,12 +20,9 @@ export async function fetchRevenue() {
     // Artificially delay a reponse for demo purposes.
     // Don't do this in real life :)
 
-    console.log('Fetching revenue data...');
     await new Promise((resolve) => setTimeout(resolve, 3000));
     
     const data = await sql<Revenue>`SELECT * FROM revenue`;
-
-    console.log('Data fetch complete after 3 seconds.');
 
     return data.rows;
   } catch (error) {
@@ -77,7 +74,6 @@ export async function fetchCardData() {
     ]);
 
     const numberOfInvoices = Number(data[0].rows[0].count ?? '0');
-    console.log('Number of invoices:', numberOfInvoices)
     const numberOfCustomers = Number(data[1].rows[0].count ?? '0');
     const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? '0');
     const totalPendingInvoices = formatCurrency(data[2].rows[0].pending ?? '0');
@@ -100,6 +96,7 @@ export async function fetchFilteredInvoices(
   currentPage: number,
 ) {
   noStore();
+
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
