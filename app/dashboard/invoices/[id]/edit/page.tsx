@@ -1,0 +1,25 @@
+import Breadcrumbs from "@/app/ui/invoices/breadcrumbs";
+import Form from "@/app/ui/invoices/edit-form";
+import { fetchInvoiceById, fetchCustomers } from "@/app/lib/data";
+import { notFound } from "next/navigation";
+
+export default async function Page({ params }: { params: { id: string } }) {
+  const id = params.id;
+  const [invoice, customers] = await Promise.all([fetchInvoiceById(id), fetchCustomers()]);
+
+  if (!invoice) {
+    return notFound();
+  }
+
+  return (
+    <main>
+      <Breadcrumbs
+        breadcrumbs={[
+          { href: "/dashboard/invoices", label: "Invoices" },
+          { href: `/dashboard/invoices/${id}/edit`, label: "Create Invoice", active: true },
+        ]}
+      />
+      <Form invoice={invoice!} customers={customers} />
+    </main>
+  );
+}
